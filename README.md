@@ -5,15 +5,15 @@ Este proyecto incluye componentes reutilizables, navegación enrutada y estructu
 
 Características principales
 
-🖥️ Interfaz moderna tipo dashboard
+Interfaz moderna tipo dashboard
 
-🧩 Componentes creados manualmente (botón, header, etc.)
+Componentes creados manualmente (botón, header, etc.)
 
-📂 Estructura organizada en carpetas: components, pages, services
+Estructura organizada en carpetas: components, pages, services
 
-⚡ Optimizado para futuras integraciones con base de datos
+Optimizado para futuras integraciones con base de datos
 
-🌐 Preparado para desplegarse en cualquier hosting o Firebase
+Preparado para desplegarse en cualquier hosting o Firebase
 
 Objetivo del proyecto
 
@@ -29,13 +29,13 @@ Diseñar interfaces iniciales del sistema
 
 Estado del Proyecto
 
-✔️ Proyecto base funcionando
+Proyecto base funcionando
 
-✔️ Módulo de componentes creado
+Módulo de componentes creado
 
-✔️ Primeros componentes implementados (login, botón, header)
+Primeros componentes implementados (login, botón, header)
 
-🔄 En desarrollo: pantallas del dashboard
+En desarrollo: pantallas del dashboard
 
 Tecnologías utilizadas
 
