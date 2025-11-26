@@ -48,6 +48,8 @@ HTML5 / CSS3
 Node.js
 
 Git / GitHub
+lista de tareas 
+https://trello.com/b/Pv1qGYTF/appweb
 
 Integrante
 
