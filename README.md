@@ -1,59 +1,54 @@
-# Nilton
+NiltonApp – Dashboard Web
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
+NiltonApp es una aplicación web desarrollada con Angular que permite gestionar información mediante un panel administrativo moderno.
+Este proyecto incluye componentes reutilizables, navegación enrutada y estructura modular para facilitar su mantenimiento y escalabilidad.
 
-## Development server
+Características principales
 
-To start a local development server, run:
+🖥️ Interfaz moderna tipo dashboard
 
-```bash
-ng serve
-```
+🧩 Componentes creados manualmente (botón, header, etc.)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+📂 Estructura organizada en carpetas: components, pages, services
 
-## Code scaffolding
+⚡ Optimizado para futuras integraciones con base de datos
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+🌐 Preparado para desplegarse en cualquier hosting o Firebase
 
-```bash
-ng generate component component-name
-```
+Objetivo del proyecto
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Este proyecto fue desarrollado como parte de la materia Práctica Profesional en Ingeniería de Sistemas, con el objetivo de:
 
-```bash
-ng generate --help
-```
+Practicar el uso del framework Angular
 
-## Building
+Implementar una estructura real de proyecto profesional
 
-To build the project run:
+Comprender la creación de componentes reutilizables
 
-```bash
-ng build
-```
+Diseñar interfaces iniciales del sistema
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Estado del Proyecto
 
-## Running unit tests
+✔️ Proyecto base funcionando
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+✔️ Módulo de componentes creado
 
-```bash
-ng test
-```
+✔️ Primeros componentes implementados (login, botón, header)
 
-## Running end-to-end tests
+🔄 En desarrollo: pantallas del dashboard
 
-For end-to-end (e2e) testing, run:
+Tecnologías utilizadas
 
-```bash
-ng e2e
-```
+Angular 17+
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+TypeScript
 
-## Additional Resources
+HTML5 / CSS3
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Node.js
+
+Git / GitHub
+
+Integrante
+
+Jhoasir Nilton Garnica Copa
