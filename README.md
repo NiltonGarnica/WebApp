@@ -47,10 +47,10 @@ HTML5 / CSS3
 
 Node.js
 
-
+Git / GitHub
 lista de tareas 
-https://trello.com/b/Pv1qGYTF/appweb
-
+https://trello.com/invite/b/6927478b84f80432138149db/ATTI89069e8dfdcc8b9288281378eb2a6aa58B6E91E7/appweb
 Integrante
+
 
 Jhoasir Nilton Garnica Copa
