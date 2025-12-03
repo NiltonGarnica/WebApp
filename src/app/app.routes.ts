@@ -8,6 +8,7 @@ import { Usuarios } from './pages/usuarios/usuarios';
 import { Configuracion } from './pages/configuracion/configuracion';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', component: Login },
   { path: 'dashboard', component: Dashboard },
   { path: 'subir-excel', component: SubirExcel },
