@@ -11,5 +11,5 @@ import { BotonPruebaComponent } from './components/boton-prueba/boton-prueba.com
   styleUrl: './app.css',
 })
 export class App {
-  protected readonly title = signal('nilton');
+  protected readonly title = signal('');
 }
