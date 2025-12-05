@@ -1,6 +1,26 @@
-<app-sidebar></app-sidebar>
+<!-- HEADER -->
+<app-header></app-header>
 
-<div class="contenido">
-  <app-tarjetas-resumen></app-tarjetas-resumen>
-  <app-panel-central></app-panel-central>
+<div class="flex">
+
+  <!-- SIDEBAR -->
+  <app-sidebar></app-sidebar>
+
+  <!-- CONTENIDO -->
+  <main class="flex-1 p-6 space-y-6">
+
+    <!-- TARJETAS -->
+    <app-tarjetas-resumen></app-tarjetas-resumen>
+
+    <!-- PANEL CENTRAL (GRÁFICOS) -->
+    <app-panel-central></app-panel-central>
+
+    <!-- TABLA DE MOVIMIENTOS -->
+    <app-tabla-movimientos></app-tabla-movimientos>
+
+  </main>
+
 </div>
+
+<!-- FOOTER -->
+<app-footer></app-footer>

@@ -1,2 +1,33 @@
-<h2>Usuarios</h2>
-<app-tabla-usuarios></app-tabla-usuarios>
+<div class="flex h-screen bg-gray-100">
+
+  <!-- Sidebar -->
+  <app-sidebar class="w-64"></app-sidebar>
+
+  <!-- Contenido principal -->
+  <div class="flex-1 flex flex-col">
+
+
+    <main class="p-6 space-y-6 max-w-6xl mx-auto">
+
+
+      <!-- Título + botón -->
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-gray-800">Gestión de Usuarios</h1>
+
+        <button
+          (click)="abrirFormulario()"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+          + Nuevo usuario
+        </button>
+      </div>
+
+      <!-- Tabla de usuarios -->
+      <app-tabla-usuarios></app-tabla-usuarios>
+
+      <!-- Formulario (visible solo cuando abres modal) -->
+      <app-formulario-usuarios *ngIf="mostrarFormulario"></app-formulario-usuarios>
+
+    </main>
+
+  </div>
+</div>

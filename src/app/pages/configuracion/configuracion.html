@@ -1,2 +1,59 @@
-<h2>Configuración del sistema</h2>
-<app-formulario-configuracion></app-formulario-configuracion>
+<div class="flex h-screen bg-gray-100">
+
+  <!-- Sidebar -->
+  <app-sidebar class="w-64"></app-sidebar>
+
+  <!-- Contenido principal -->
+  <div class="flex-1 p-8 overflow-auto">
+
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">Configuración del Sistema</h1>
+
+    <div class="bg-white rounded-xl shadow-md p-6 space-y-6">
+
+      <!-- Nombre del sistema -->
+      <div>
+        <label class="font-semibold text-gray-700">Nombre del sistema</label>
+        <input type="text" [(ngModel)]="nombreSistema"
+               class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <!-- Logo -->
+      <div>
+        <label class="font-semibold text-gray-700">Logo</label>
+        <div class="flex items-center gap-4 mt-2">
+          <div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center text-gray-500">
+            Logo
+          </div>
+          <button class="px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-800">
+            Subir imagen
+          </button>
+        </div>
+      </div>
+
+      <!-- Ajustes -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+        <label class="flex items-center gap-2">
+          <input type="checkbox" [(ngModel)]="notificaciones" />
+          <span class="text-gray-700">Activar notificaciones</span>
+        </label>
+
+        <label class="flex items-center gap-2">
+          <input type="checkbox" [(ngModel)]="temaOscuro" />
+          <span class="text-gray-700">Tema oscuro</span>
+        </label>
+
+      </div>
+
+      <!-- Botón Guardar -->
+      <div class="pt-4">
+        <button (click)="guardar()"
+                class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+          Guardar configuración
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+</div>
