@@ -1,4 +1,12 @@
-.contenido {
-  margin-left: 240px;
+.layout {
+  display: flex;
+}
+
+app-sidebar {
+  width: 220px;
+}
+
+.content {
+  flex: 1;
   padding: 20px;
 }

@@ -1,5 +1,15 @@
-<app-sidebar></app-sidebar>
+<h1>Subir archivo Excel</h1>
 
-<div class="contenido">
-    <h1>subir excel</h1>
+<input type="file" (change)="onFileSelected($event)" accept=".xlsx, .xls" />
+
+<div *ngIf="data.length > 0">
+  <h3>Datos leídos:</h3>
+  <table border="1" cellpadding="5">
+    <tr>
+      <th *ngFor="let col of data[0]">{{ col }}</th>
+    </tr>
+    <tr *ngFor="let row of data.slice(1)">
+      <td *ngFor="let cell of row">{{ cell }}</td>
+    </tr>
+  </table>
 </div>
