@@ -1,0 +1,33 @@
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+  <!-- Usuarios activos -->
+  <div class="p-6 bg-white rounded-xl shadow">
+    <p class="text-gray-500">Usuarios activos</p>
+    <h2 class="text-3xl font-bold text-blue-600">
+      {{ usuariosActivos }}
+    </h2>
+  </div>
+
+  <!-- Reportes hoy (fijo por ahora o lo conectamos luego) -->
+  <div class="p-6 bg-white rounded-xl shadow">
+    <p class="text-gray-500">Reportes hoy</p>
+    <h2 class="text-3xl font-bold text-green-600">47</h2>
+  </div>
+
+  <!-- Ingresos -->
+  <div class="p-6 bg-white rounded-xl shadow">
+    <p class="text-gray-500">Ingresos del mes</p>
+    <h2 class="text-3xl font-bold text-indigo-600">
+      {{ ingresosMes }} Bs
+    </h2>
+  </div>
+
+  <!-- Gastos -->
+  <div class="p-6 bg-white rounded-xl shadow">
+    <p class="text-gray-500">Gastos del mes</p>
+    <h2 class="text-3xl font-bold text-red-600">
+      {{ gastosMes }} Bs
+    </h2>
+  </div>
+
+</div>

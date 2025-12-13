@@ -1,0 +1,36 @@
+<div class="flex">
+
+  <main class="flex-1 p-6 space-y-6">
+
+    <!-- TARJETAS -->
+    <app-tarjetas-resumen
+      [usuariosActivos]="usuariosActivos"
+      [ingresosMes]="ingresosMes"
+      [gastosMes]="gastosMes">
+    </app-tarjetas-resumen>
+
+    <!-- 🎯 PANEL CENTRAL (SOLO UNO) -->
+    <app-panel-central
+      [datos]="datosParaGrafico"
+      [ingresos]="ingresosMes"
+      [gastos]="gastosMes">
+    </app-panel-central>
+
+    <!-- TABLA -->
+    <app-tabla-movimientos></app-tabla-movimientos>
+
+  </main>
+
+</div>
+
+<!-- BIENVENIDA -->
+<div class="p-6">
+  <h1 class="text-3xl font-bold mb-2">
+    Bienvenido, {{ user?.nombre }} 👋
+  </h1>
+
+  <p class="text-gray-600 text-lg">
+    Rol: <strong>{{ user?.rol }}</strong>
+    · Correo: <strong>{{ user?.email }}</strong>
+  </p>
+</div>

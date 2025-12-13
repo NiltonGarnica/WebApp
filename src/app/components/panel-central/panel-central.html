@@ -1,0 +1,16 @@
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+  <!-- Izquierda: movimientos -->
+  <div class="p-6 bg-white rounded-xl shadow">
+    <app-grafico-movimientos [datos]="datos"></app-grafico-movimientos>
+  </div>
+
+  <!-- Derecha: ingresos vs gastos -->
+    <div class="p-6 bg-white rounded-xl shadow">
+    <app-grafico-ingresos-gastos 
+      [ingresos]="ingresos"
+      [gastos]="gastos">
+    </app-grafico-ingresos-gastos>
+  </div>
+
+</div>

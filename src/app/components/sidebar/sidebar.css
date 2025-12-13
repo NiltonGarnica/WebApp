@@ -1,0 +1,46 @@
+/* Botón hamburguesa */
+.toggle-btn {
+  font-size: 24px;
+  background: white;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2000;
+}
+
+/* Sidebar oculto por defecto */
+.sidebar {
+  width: 200px;
+  height: 100vh;
+  background: white;
+  position: fixed;
+  left: -220px;
+  top: 0;
+  padding-top: 60px;
+  transition: 0.3s ease;
+  box-shadow: 2px 0px 6px rgba(0,0,0,0.2);
+}
+
+/* Sidebar visible */
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar ul li a {
+  display: block;
+  padding: 10px 20px;
+  color: black;
+  text-decoration: none;
+}
+
+.sidebar ul li a:hover {
+  background: #f1f1f1;
+}

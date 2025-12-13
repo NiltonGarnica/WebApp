@@ -1,0 +1,30 @@
+<main class="p-6 space-y-6 max-w-6xl mx-auto">
+
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-bold text-gray-800">Gestión de Usuarios</h1>
+
+    <button
+      (click)="abrirFormulario()"
+      class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+      + Nuevo usuario
+    </button>
+  </div>
+
+  <!-- TABLA -->
+  <app-tabla-usuarios
+    [usuarios]="usuarios"
+    (editarUsuario)="editar($event)"
+    (eliminarUsuario)="eliminar($event)">
+  </app-tabla-usuarios>
+
+  <!-- FORMULARIO -->
+  <app-formulario-usuarios
+  *ngIf="mostrarFormulario"
+  [modoCrear]="modoCrear"
+  [usuarioEditar]="usuarioEditando"
+  (onSave)="actualizarTabla()"
+  (cerrar)="cerrarFormulario()">
+</app-formulario-usuarios>
+
+
+</main>

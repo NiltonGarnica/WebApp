@@ -1,0 +1,49 @@
+<table class="w-full text-left border-collapse">
+  <thead>
+    <tr class="bg-gray-100">
+      <th class="p-3">Nombre</th>
+      <th class="p-3">Email</th>
+      <th class="p-3">Rol</th>
+      <th class="p-3">Estado</th>
+      <th class="p-3">Acciones</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let u of usuarios" class="border-b">
+
+      <td class="p-3">{{ u.nombre }}</td>
+      <td class="p-3">{{ u.email }}</td>
+      <td class="p-3">{{ u.rol }}</td>
+
+      <td class="p-3">
+        <span
+          class="px-2 py-1 rounded text-white"
+          [class.bg-green-600]="u.estado"
+          [class.bg-red-600]="!u.estado"
+        >
+          {{ u.estado ? 'Activo' : 'Inactivo' }}
+        </span>
+      </td>
+
+      <td class="p-3 flex gap-2">
+
+        <!-- EDITAR -->
+        <button
+          class="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+          (click)="editarUsuario.emit(u)">
+          Editar
+        </button>
+
+        <!-- ELIMINAR -->
+        <button
+          class="px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700"
+          (click)="eliminarUsuario.emit(u._id)">
+          Eliminar
+        </button>
+
+      </td>
+
+    </tr>
+  </tbody>
+</table>
