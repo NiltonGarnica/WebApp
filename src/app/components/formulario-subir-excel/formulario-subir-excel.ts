@@ -1,6 +1,6 @@
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
-import { ExcelService } from '../../services/excel.service';
 import { CommonModule } from '@angular/common';
+import { ExcelService } from '../../services/excel.service';
 import { DashboardDataService } from '../../services/dashboard-data.service';
 
 @Component({
@@ -24,26 +24,34 @@ export class FormularioSubirExcel implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
+  // 🔥 Cargar datos desde MongoDB al iniciar
   ngOnInit() {
-    // 🔥 Restaurar la tabla si ya se subió antes
-    const guardados = this.dashboardData.getTablaExcel();
-    if (guardados.length > 0) {
-      this.datosExcel = guardados;
-    }
+    this.excelService.obtenerDatasets().subscribe({
+      next: (datasets: any[]) => {
+        if (datasets.length > 0) {
+          const ultimo = datasets[0]; // dataset más reciente
+
+          this.datosExcel = ultimo.filas;
+
+          this.dashboardData.setTablaExcel(ultimo.filas);
+          this.dashboardData.setData({
+            usuariosActivos: ultimo.filas.length,
+            totalIngresos: this.calcularIngresos(ultimo.filas),
+            totalGastos: this.calcularGastos(ultimo.filas),
+            datos: ultimo.filas
+          });
+
+          this.cdr.detectChanges();
+        }
+      },
+      error: (err) => {
+        console.error("Error cargando datasets desde BD", err);
+      }
+    });
   }
 
   seleccionarArchivo(event: any) {
     this.archivo = event.target.files[0];
-  }
-
-  mostrarSuccess(msg: string) {
-    this.msgSuccess = msg;
-    setTimeout(() => this.msgSuccess = null, 3000);
-  }
-
-  mostrarError(msg: string) {
-    this.msgError = msg;
-    setTimeout(() => this.msgError = null, 3000);
   }
 
   subir() {
@@ -54,16 +62,9 @@ export class FormularioSubirExcel implements OnInit {
 
     this.excelService.subirExcel(this.archivo).subscribe({
       next: (res) => {
-        console.log("Excel procesado:", res);
-
         this.datosExcel = res.datos;
 
-        // 👉 Guardar tabla global
         this.dashboardData.setTablaExcel(res.datos);
-
-        this.cdr.detectChanges();
-
-        // 👉 Actualizar Dashboard
         this.dashboardData.setData({
           usuariosActivos: res.datos.length,
           totalIngresos: this.calcularIngresos(res.datos),
@@ -71,13 +72,24 @@ export class FormularioSubirExcel implements OnInit {
           datos: res.datos
         });
 
-        this.mostrarSuccess("Archivo cargado correctamente ✔");
+        this.cdr.detectChanges();
+        this.mostrarSuccess("Archivo cargado y guardado correctamente ✔");
       },
       error: (err) => {
         console.error(err);
         this.mostrarError("Error al subir el archivo ❌");
       }
     });
+  }
+
+  mostrarSuccess(msg: string) {
+    this.msgSuccess = msg;
+    setTimeout(() => this.msgSuccess = null, 3000);
+  }
+
+  mostrarError(msg: string) {
+    this.msgError = msg;
+    setTimeout(() => this.msgError = null, 3000);
   }
 
   calcularIngresos(datos: any[]): number {

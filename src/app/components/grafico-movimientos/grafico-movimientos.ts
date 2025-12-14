@@ -8,6 +8,8 @@ import {
   SimpleChanges
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
 import {
   Chart,
   LineController,
@@ -19,57 +21,94 @@ import {
   Legend
 } from 'chart.js';
 
-Chart.register(LineController, LineElement, PointElement, LinearScale, CategoryScale, Tooltip, Legend);
+// Registrar componentes de Chart.js
+Chart.register(
+  LineController,
+  LineElement,
+  PointElement,
+  LinearScale,
+  CategoryScale,
+  Tooltip,
+  Legend
+);
 
 @Component({
   selector: 'app-grafico-movimientos',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './grafico-movimientos.html',
 })
-export class GraficoMovimientosComponent implements AfterViewInit, OnChanges {
+export class GraficoMovimientosComponent
+  implements AfterViewInit, OnChanges {
 
+  // 📥 Datos que vienen del dashboard
   @Input() datos: any[] = [];
+
+  // 🎨 Canvas
   @ViewChild('canvas') canvas!: ElementRef<HTMLCanvasElement>;
   chart!: Chart;
 
-  ngAfterViewInit() {
-    this.generarGrafico();
-  }
+  // 🔧 Columnas dinámicas
+  columnas: string[] = [];
+  columnaX: string = '';
+  columnaY: string = '';
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['datos'] && !changes['datos'].firstChange) {
+  // 🔄 Cuando el componente ya existe
+  ngAfterViewInit() {
+    if (this.datos.length > 0) {
+      this.inicializarColumnas();
       this.generarGrafico();
     }
   }
 
+  // 🔄 Cuando cambian los datos (nuevo Excel)
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['datos'] && this.datos.length > 0) {
+      this.inicializarColumnas();
+      this.generarGrafico();
+    }
+  }
+
+  // 🧠 Detectar columnas automáticamente
+  inicializarColumnas() {
+    this.columnas = Object.keys(this.datos[0]);
+
+    // Valores por defecto
+    if (!this.columnaX) {
+      this.columnaX = this.columnas[0];
+    }
+
+    if (!this.columnaY) {
+      this.columnaY =
+        this.columnas.find(col => !isNaN(Number(this.datos[0][col]))) ||
+        this.columnas[0];
+    }
+  }
+
+  // 📊 Crear / actualizar gráfico
   generarGrafico() {
     if (!this.datos || this.datos.length === 0) {
-      console.warn("No hay datos para graficar");
+      console.warn('No hay datos para graficar');
       return;
     }
 
-    // Si ya existe un gráfico previo, eliminarlo
+    // Destruir gráfico anterior si existe
     if (this.chart) {
       this.chart.destroy();
     }
 
-    const fechas = this.datos.map(d => {
-    const excelSerial = Number(d.fecha_creacion);
-    const jsDate = new Date((excelSerial - 25569) * 86400 * 1000);
-
-    return jsDate.toISOString().split("T")[0]; // devuelve 2025-01-07
-    });
-    const montos = this.datos.map(d => Number(d.monto || 0));
+    // 📈 Datos dinámicos según columnas elegidas
+    const labels = this.datos.map(d => d[this.columnaX]);
+    const values = this.datos.map(d => Number(d[this.columnaY]) || 0);
 
     this.chart = new Chart(this.canvas.nativeElement, {
       type: 'line',
       data: {
-        labels: fechas,
+        labels,
         datasets: [
           {
-            label: 'Movimiento del día',
-            data: montos,
+            label: `${this.columnaY} vs ${this.columnaX}`,
+            data: values,
             borderColor: '#4F46E5',
             backgroundColor: 'rgba(79,70,229,0.3)',
             borderWidth: 3,

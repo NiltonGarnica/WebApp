@@ -18,4 +18,7 @@ export class ExcelService {
 
     return this.http.post(`${this.apiUrl}/upload`, formData);
   }
+  obtenerDatasets(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
+  }
 }
