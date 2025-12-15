@@ -2,12 +2,12 @@
 
   <h1 class="text-2xl font-bold mb-4">📊 Reportes de Predicción</h1>
 
-  <p *ngIf="cargando">Cargando reportes...</p>
+  <p *ngIf="cargandoIA">Cargando reportes...</p>
 
-  <table *ngIf="!cargando && historial.length"
-         class="w-full border text-sm">
+  <table *ngIf="!cargandoIA && historialIA.length"
+         class="w-full border-collapse">
 
-    <thead class="bg-gray-100">
+    <thead>
       <tr>
         <th class="border p-2">Fecha</th>
         <th class="border p-2">Gastos</th>
@@ -20,7 +20,7 @@
     </thead>
 
     <tbody>
-      <tr *ngFor="let r of historial">
+      <tr *ngFor="let r of historialIA">
         <td class="border p-2">{{ r.fecha | date:'short' }}</td>
         <td class="border p-2">{{ r.gastos }}</td>
         <td class="border p-2">{{ r.clientes }}</td>

@@ -12,13 +12,19 @@ export class ExcelService {
 
   constructor(private http: HttpClient) {}
 
+  // ======================
+  // 📤 Subir Excel
+  // ======================
   subirExcel(archivo: File): Observable<any> {
     const formData = new FormData();
     formData.append('archivo', archivo);
 
     return this.http.post(`${this.apiUrl}/upload`, formData);
   }
-  obtenerDatasets(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+
+  obtenerDatasets() {
+    return this.http.get<any[]>(this.apiUrl);
   }
+
+  
 }

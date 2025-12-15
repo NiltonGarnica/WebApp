@@ -1,53 +1,109 @@
-<div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow-md">
+<div class="max-w-5xl mx-auto p-6 space-y-6">
 
-  <h2 class="text-2xl font-bold mb-4">Subir archivo Excel</h2>
+  <!-- ===================== -->
+  <!-- 📤 SUBIR EXCEL -->
+  <!-- ===================== -->
+  <div class="bg-white p-6 rounded-xl shadow">
 
-  <!-- Mensaje de éxito -->
-  <div *ngIf="msgSuccess" class="p-3 mb-3 bg-green-100 text-green-700 rounded">
-    {{ msgSuccess }}
+    <h2 class="text-2xl font-bold mb-4">📤 Subir archivo Excel</h2>
+
+    <!-- Mensajes -->
+    <div *ngIf="msgSuccess" class="mb-3 p-3 bg-green-100 text-green-700 rounded">
+      {{ msgSuccess }}
+    </div>
+
+    <div *ngIf="msgError" class="mb-3 p-3 bg-red-100 text-red-700 rounded">
+      {{ msgError }}
+    </div>
+
+    <div class="flex items-center gap-3">
+      <input
+        type="file"
+        (change)="seleccionarArchivo($event)"
+        class="border p-2 rounded w-full"
+      />
+
+      <button
+        (click)="subir()"
+        class="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700">
+        Subir
+      </button>
+    </div>
   </div>
 
-  <!-- Mensaje de error -->
-  <div *ngIf="msgError" class="p-3 mb-3 bg-red-100 text-red-700 rounded">
-    {{ msgError }}
+  <!-- ===================== -->
+  <!-- 📚 HISTORIAL DATASETS -->
+  <!-- ===================== -->
+  <div class="bg-white p-6 rounded-xl shadow">
+
+    <h3 class="text-xl font-semibold mb-4">📚 Historial de Excels</h3>
+
+    <div *ngIf="datasets.length === 0" class="text-gray-500">
+      No hay archivos cargados aún.
+    </div>
+
+    <ul *ngIf="datasets.length > 0" class="space-y-2">
+      <li
+        *ngFor="let d of datasets"
+        class="flex items-center justify-between border p-3 rounded hover:bg-gray-50">
+
+        <div>
+          <p class="font-medium">{{ d.nombre }}</p>
+          <p class="text-sm text-gray-500">
+            {{ d.filas.length }} filas · {{ d.createdAt | date:'short' }}
+          </p>
+        </div>
+
+        <button
+          (click)="usarDataset(d)"
+          class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+          Usar
+        </button>
+      </li>
+    </ul>
   </div>
 
-  <input 
-    type="file" 
-    (change)="seleccionarArchivo($event)"
-    class="border p-2 rounded w-full mb-3"
-  >
+  <!-- ===================== -->
+  <!-- 📊 DATASET ACTIVO -->
+  <!-- ===================== -->
+  <div *ngIf="datasetActivo" class="bg-white p-6 rounded-xl shadow">
 
-  <button 
-    (click)="subir()" 
-    class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-    Subir archivo
-  </button>
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="text-xl font-semibold">
+        📊 Dataset activo: {{ datasetActivo.nombre }}
+      </h3>
 
-  <hr class="my-5">
+      <button
+        (click)="limpiarVista()"
+        class="text-sm text-red-600 hover:underline">
+        Limpiar
+      </button>
+    </div>
 
-  <h3 class="text-xl font-semibold mb-3">Datos procesados:</h3>
+    <div class="overflow-auto max-h-[400px] border rounded">
+      <table class="w-full border-collapse text-sm">
+        <thead class="bg-gray-100 sticky top-0">
+          <tr>
+            <th
+              *ngFor="let col of datosExcel[0] | keyvalue"
+              class="border p-2 text-left">
+              {{ col.key }}
+            </th>
+          </tr>
+        </thead>
 
-  <div *ngIf="datosExcel.length === 0">
-    <p class="text-gray-500">No hay datos aún.</p>
+        <tbody>
+          <tr *ngFor="let fila of datosExcel" class="hover:bg-gray-50">
+            <td
+              *ngFor="let col of fila | keyvalue"
+              class="border p-2">
+              {{ col.value }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
   </div>
-
-  <table *ngIf="datosExcel.length > 0" class="w-full border-collapse">
-    <thead>
-      <tr class="bg-gray-200">
-        <th *ngFor="let col of datosExcel[0] | keyvalue" class="p-2 border text-left">
-          {{ col.key }}
-        </th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr *ngFor="let fila of datosExcel" class="hover:bg-gray-50">
-        <td *ngFor="let col of fila | keyvalue" class="p-2 border">
-          {{ col.value }}
-        </td>
-      </tr>
-    </tbody>
-  </table>
 
 </div>

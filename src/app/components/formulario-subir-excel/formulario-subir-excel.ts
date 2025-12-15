@@ -12,9 +12,19 @@ import { DashboardDataService } from '../../services/dashboard-data.service';
 })
 export class FormularioSubirExcel implements OnInit {
 
+  // 📁 Archivo seleccionado
   archivo: File | null = null;
+
+  // 📊 Datos mostrados en tabla
   datosExcel: any[] = [];
 
+  // 📚 Historial de datasets
+  datasets: any[] = [];
+
+  // 📌 Dataset activo
+  datasetActivo: any = null;
+
+  // 🔔 Mensajes
   msgSuccess: string | null = null;
   msgError: string | null = null;
 
@@ -24,74 +34,83 @@ export class FormularioSubirExcel implements OnInit {
     private cdr: ChangeDetectorRef
   ) {}
 
-  // 🔥 Cargar datos desde MongoDB al iniciar
+  // 🔥 Cargar datasets al iniciar
   ngOnInit() {
-    this.excelService.obtenerDatasets().subscribe({
-      next: (datasets: any[]) => {
-        if (datasets.length > 0) {
-          const ultimo = datasets[0]; // dataset más reciente
-
-          this.datosExcel = ultimo.filas;
-
-          this.dashboardData.setTablaExcel(ultimo.filas);
-          this.dashboardData.setData({
-            usuariosActivos: ultimo.filas.length,
-            totalIngresos: this.calcularIngresos(ultimo.filas),
-            totalGastos: this.calcularGastos(ultimo.filas),
-            datos: ultimo.filas
-          });
-
-          this.cdr.detectChanges();
-        }
-      },
-      error: (err) => {
-        console.error("Error cargando datasets desde BD", err);
-      }
-    });
+    this.cargarDatasets();
   }
 
+  // =========================
+  // 📤 Seleccionar archivo
+  // =========================
   seleccionarArchivo(event: any) {
     this.archivo = event.target.files[0];
   }
 
+  // =========================
+  // ⬆️ Subir Excel
+  // =========================
   subir() {
     if (!this.archivo) {
-      this.mostrarError("Selecciona un archivo primero");
+      this.mostrarError('Selecciona un archivo primero');
       return;
     }
 
     this.excelService.subirExcel(this.archivo).subscribe({
-      next: (res) => {
-        this.datosExcel = res.datos;
-
-        this.dashboardData.setTablaExcel(res.datos);
-        this.dashboardData.setData({
-          usuariosActivos: res.datos.length,
-          totalIngresos: this.calcularIngresos(res.datos),
-          totalGastos: this.calcularGastos(res.datos),
-          datos: res.datos
-        });
-
-        this.cdr.detectChanges();
-        this.mostrarSuccess("Archivo cargado y guardado correctamente ✔");
+      next: () => {
+        this.mostrarSuccess('Archivo cargado correctamente ✔');
+        this.archivo = null;
+        this.cargarDatasets(); // 🔄 refrescar lista
       },
-      error: (err) => {
-        console.error(err);
-        this.mostrarError("Error al subir el archivo ❌");
+      error: () => {
+        this.mostrarError('Error al subir el archivo ❌');
       }
     });
   }
 
-  mostrarSuccess(msg: string) {
-    this.msgSuccess = msg;
-    setTimeout(() => this.msgSuccess = null, 3000);
+  // =========================
+  // 📚 Cargar historial
+  // =========================
+  cargarDatasets() {
+    this.excelService.obtenerDatasets().subscribe({
+      next: (data: any[]) => {
+        this.datasets = data;
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.mostrarError('Error cargando datasets');
+      }
+    });
   }
 
-  mostrarError(msg: string) {
-    this.msgError = msg;
-    setTimeout(() => this.msgError = null, 3000);
+  // =========================
+  // ▶️ Usar dataset
+  // =========================
+  usarDataset(dataset: any) {
+    this.datasetActivo = dataset;
+    this.datosExcel = dataset.filas;
+
+    this.dashboardData.setTablaExcel(dataset.filas);
+    this.dashboardData.setData({
+      usuariosActivos: dataset.filas.length,
+      totalIngresos: this.calcularIngresos(dataset.filas),
+      totalGastos: this.calcularGastos(dataset.filas),
+      datos: dataset.filas
+    });
+
+    this.cdr.detectChanges();
   }
 
+  // =========================
+  // 🧹 Limpiar vista
+  // =========================
+  limpiarVista() {
+    this.datasetActivo = null;
+    this.datosExcel = [];
+  }
+
+  // =========================
+  // 🧮 Cálculos
+  // =========================
   calcularIngresos(datos: any[]): number {
     return datos
       .filter(f => f.tipo?.toLowerCase() === 'ingreso')
@@ -102,5 +121,18 @@ export class FormularioSubirExcel implements OnInit {
     return datos
       .filter(f => f.tipo?.toLowerCase() === 'gasto')
       .reduce((acc, f) => acc + Number(f.monto || 0), 0);
+  }
+
+  // =========================
+  // 🔔 Mensajes
+  // =========================
+  mostrarSuccess(msg: string) {
+    this.msgSuccess = msg;
+    setTimeout(() => this.msgSuccess = null, 3000);
+  }
+
+  mostrarError(msg: string) {
+    this.msgError = msg;
+    setTimeout(() => this.msgError = null, 3000);
   }
 }

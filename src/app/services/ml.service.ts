@@ -7,21 +7,52 @@ import { Observable } from 'rxjs';
 })
 export class MlService {
 
-  private apiUrl = 'http://localhost:3000/api/ml/predict';
+  // 🔗 Base de la API
+  private api = 'http://localhost:3000/api/ml';
 
   constructor(private http: HttpClient) {}
 
+  // =========================
+  // 🔮 PREDICCIÓN SIMPLE (YA FUNCIONA)
+  // =========================
   predecirIngresos(data: {
     gastos: number;
     clientes: number;
     promociones: number;
-  }): Observable<any> {
-    return this.http.post(this.apiUrl, data);
+  }): Observable<{ prediccion_ingresos: number }> {
+    return this.http.post<{ prediccion_ingresos: number }>(
+      `${this.api}/predict`,
+      data
+    );
   }
 
-  getHistorial() {
-    return this.http.get<any[]>(
-      'http://localhost:3000/api/ml/history'
+  // =========================
+  // 📜 HISTORIAL (OPCIONAL)
+  // =========================
+  getHistorial(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.api}/history`);
+  }
+
+  // =========================
+  // 🤖 PREDICCIÓN FUTURA MULTIVARIABLE (NUEVA 🔥)
+  // =========================
+  predecirFuturo(
+    historial: any[],
+    meses: number
+  ): Observable<{
+    meses: number[];
+    gastos: number[];
+    clientes: number[];
+    ingresos: number[];
+  }> {
+    return this.http.post<{
+      meses: number[];
+      gastos: number[];
+      clientes: number[];
+      ingresos: number[];
+    }>(
+      `${this.api}/predict-futuro`,
+      { historial, meses }
     );
   }
 }
