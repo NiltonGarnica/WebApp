@@ -1,10 +1,22 @@
-<div *ngIf="mostrarLayout">
-  <app-header></app-header>
-  <app-sidebar></app-sidebar>
-</div>
+<div class="min-h-screen flex flex-col">
 
-<router-outlet></router-outlet>
+  <!-- HEADER -->
+  <app-header *ngIf="mostrarLayout"></app-header>
 
-<div *ngIf="mostrarLayout">
-  <app-footer></app-footer>
+  <!-- CUERPO -->
+  <div class="flex flex-1">
+
+    <!-- SIDEBAR -->
+    <app-sidebar *ngIf="mostrarLayout"></app-sidebar>
+
+    <!-- CONTENIDO -->
+    <main class="flex-1">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
+  <!-- FOOTER -->
+  <app-footer *ngIf="mostrarLayout"></app-footer>
+
 </div>

@@ -1,0 +1,42 @@
+<div class="p-6 space-y-6">
+
+  <h1 class="text-2xl font-bold">🤖 Inteligencia Artificial</h1>
+
+  <div class="bg-white rounded-xl shadow p-6 space-y-4">
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <input type="number" [(ngModel)]="gastos"
+        placeholder="Gastos"
+        class="border p-2 rounded" />
+
+      <input type="number" [(ngModel)]="clientes"
+        placeholder="Clientes"
+        class="border p-2 rounded" />
+
+      <input type="number" [(ngModel)]="promociones"
+        placeholder="Promociones"
+        class="border p-2 rounded" />
+    </div>
+
+    <button
+      (click)="predecir()"
+      class="bg-blue-600 text-white px-4 py-2 rounded">
+      Predecir
+    </button>
+
+    <p *ngIf="cargando">Calculando...</p>
+    <p *ngIf="error" class="text-red-600">{{ error }}</p>
+
+    <p *ngIf="prediccion !== null" class="text-green-700 text-lg">
+      📈 Predicción: {{ prediccion | number:'1.2-2' }}
+    </p>
+
+  </div>
+
+  <app-grafico-real-vs-prediccion
+    *ngIf="prediccion !== null"
+    [real]="0"
+    [prediccion]="prediccion">
+  </app-grafico-real-vs-prediccion>
+
+</div>

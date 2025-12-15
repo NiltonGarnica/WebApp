@@ -1,0 +1,39 @@
+<div class="p-6">
+
+  <h1 class="text-2xl font-bold mb-4">📊 Reportes de Predicción</h1>
+
+  <p *ngIf="cargando">Cargando reportes...</p>
+
+  <table *ngIf="!cargando && historial.length"
+         class="w-full border text-sm">
+
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="border p-2">Fecha</th>
+        <th class="border p-2">Gastos</th>
+        <th class="border p-2">Clientes</th>
+        <th class="border p-2">Promos</th>
+        <th class="border p-2">Real</th>
+        <th class="border p-2">Predicho</th>
+        <th class="border p-2">Δ</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let r of historial">
+        <td class="border p-2">{{ r.fecha | date:'short' }}</td>
+        <td class="border p-2">{{ r.gastos }}</td>
+        <td class="border p-2">{{ r.clientes }}</td>
+        <td class="border p-2">{{ r.promociones }}</td>
+        <td class="border p-2">{{ r.ingresosReales }}</td>
+        <td class="border p-2">{{ r.ingresosPredichos }}</td>
+        <td class="border p-2"
+            [ngClass]="r.diferencia >= 0 ? 'text-green-600' : 'text-red-600'">
+          {{ r.diferencia }}
+        </td>
+      </tr>
+    </tbody>
+
+  </table>
+
+</div>
