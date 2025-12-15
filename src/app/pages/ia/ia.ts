@@ -5,6 +5,7 @@ import * as XLSX from 'xlsx';
 import * as Plotly from 'plotly.js-dist-min';
 
 import { MlService } from '../../services/ml.service';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-ia',
@@ -12,8 +13,6 @@ import { MlService } from '../../services/ml.service';
   imports: [CommonModule, FormsModule],
   templateUrl: './ia.html'
 })
-
-
 export class IA {
 
   // =========================
@@ -50,7 +49,21 @@ export class IA {
   clientesML: number[] = [];
   ingresosML: number[] = [];
 
-  constructor(private mlService: MlService) {}
+  // =========================
+  // 💬 CHAT IA
+  // =========================
+  mensajes: { rol: 'user' | 'ia'; texto: string }[] = [];
+  mensajeUsuario = '';
+
+  // =========================
+  // 🌋 MODO 3D
+  // =========================
+  modoSuperficie = false;
+
+  constructor(
+    private mlService: MlService,
+    private chatService: ChatService
+  ) {}
 
   // =========================
   // 📂 SUBIR EXCEL
@@ -68,19 +81,16 @@ export class IA {
 
       this.excelData = XLSX.utils.sheet_to_json(sheet);
 
-      // Extraer datos reales
       this.mesesReales = this.excelData.map(d => `Mes ${d.mes}`);
       this.gastosReales = this.excelData.map(d => Number(d.gastos));
       this.clientesReales = this.excelData.map(d => Number(d.clientes));
       this.ingresosReales = this.excelData.map(d => Number(d.ingresos));
 
-      // Limpiar predicción
       this.mesesFuturos = [];
       this.gastosML = [];
       this.clientesML = [];
       this.ingresosML = [];
 
-      // Dibujar gráficas SOLO con datos reales
       this.grafica2D();
       this.grafica3D();
     };
@@ -89,7 +99,7 @@ export class IA {
   }
 
   // =========================
-  // 🤖 EJECUTAR ML FUTURO
+  // 🤖 EJECUTAR ML
   // =========================
   ejecutarML() {
     if (!this.excelData.length) {
@@ -101,13 +111,7 @@ export class IA {
     this.error = null;
 
     this.mlService.predecirFuturo(this.excelData, this.meses).subscribe({
-      next: (res: {
-        meses: number[];
-        gastos: number[];
-        clientes: number[];
-        ingresos: number[];
-      }) => {
-
+      next: (res) => {
         this.mesesFuturos = res.meses.map(m => `Mes ${m} (ML)`);
         this.gastosML = res.gastos;
         this.clientesML = res.clientes;
@@ -115,7 +119,6 @@ export class IA {
 
         this.grafica2D();
         this.grafica3D();
-
         this.cargando = false;
       },
       error: () => {
@@ -126,7 +129,7 @@ export class IA {
   }
 
   // =========================
-  // 📊 GRAFICA 2D (3 VARIABLES)
+  // 📊 GRAFICA 2D
   // =========================
   grafica2D() {
     Plotly.newPlot('grafica2D', [
@@ -163,86 +166,85 @@ export class IA {
   }
 
   // =========================
-  // 🌋 GRAFICA 3D CON RELIEVE
+  // 🌋 GRAFICA 3D
   // =========================
-  modoSuperficie = false; // false = puntos, true = relieve
+  grafica3D() {
 
-grafica3D() {
+    const x = this.mesesReales.concat(this.mesesFuturos);
 
-  const x = this.mesesReales.concat(this.mesesFuturos);
+    const z = [
+      this.gastosReales.concat(this.gastosML),
+      this.clientesReales.concat(this.clientesML),
+      this.ingresosReales.concat(this.ingresosML)
+    ];
 
-  const z = [
-    this.gastosReales.concat(this.gastosML),
-    this.clientesReales.concat(this.clientesML),
-    this.ingresosReales.concat(this.ingresosML)
-  ];
+    let data: any[] = [];
 
-  let data: any[] = [];
-
-  // =========================
-  // 🌋 SUPERFICIE (RELIEVE)
-  // =========================
-  if (this.modoSuperficie) {
-    data = [
-      {
+    if (this.modoSuperficie) {
+      data = [{
         type: 'surface',
         x: x,
         y: ['Gastos', 'Clientes', 'Ingresos'],
         z: z,
         colorscale: 'Viridis'
+      }];
+    } else {
+      data = [
+        {
+          type: 'scatter3d',
+          mode: 'lines+markers',
+          name: 'Gastos',
+          x: x,
+          y: this.gastosReales.concat(this.gastosML),
+          z: this.ingresosReales.concat(this.ingresosML),
+          marker: { color: 'blue', size: 4 }
+        },
+        {
+          type: 'scatter3d',
+          mode: 'lines+markers',
+          name: 'Clientes',
+          x: x,
+          y: this.clientesReales.concat(this.clientesML),
+          z: this.ingresosReales.concat(this.ingresosML),
+          marker: { color: 'green', size: 4 }
+        },
+        {
+          type: 'scatter3d',
+          mode: 'lines+markers',
+          name: 'Ingresos',
+          x: x,
+          y: this.ingresosReales.concat(this.ingresosML),
+          z: this.ingresosReales.concat(this.ingresosML),
+          marker: { color: 'red', size: 4 }
+        }
+      ];
+    }
+
+    Plotly.newPlot('grafica3D', data, {
+      title: this.modoSuperficie ? 'Superficie 3D con relieve' : 'Gráfica 3D (puntos)',
+      scene: {
+        xaxis: { title: 'Mes' },
+        yaxis: { title: 'Variable / Valor' },
+        zaxis: { title: 'Ingresos' }
       }
-    ];
+    });
   }
 
   // =========================
-  // 🔵 PUNTOS 3D
+  // 💬 CHAT IA
   // =========================
-  else {
-  data = [
-    {
-      type: 'scatter3d',
-      mode: 'lines+markers',
-      name: 'Gastos',
-      x: x,
-      y: this.gastosReales.concat(this.gastosML),
-      z: this.ingresosReales.concat(this.ingresosML),
-      marker: { size: 4, color: 'blue' },
-      line: { color: 'blue' }
-    },
-    {
-      type: 'scatter3d',
-      mode: 'lines+markers',
-      name: 'Clientes',
-      x: x,
-      y: this.clientesReales.concat(this.clientesML),
-      z: this.ingresosReales.concat(this.ingresosML),
-      marker: { size: 4, color: 'green' },
-      line: { color: 'green' }
-    },
-    {
-      type: 'scatter3d',
-      mode: 'lines+markers',
-      name: 'Ingresos',
-      x: x,
-      y: this.ingresosReales.concat(this.ingresosML),
-      z: this.ingresosReales.concat(this.ingresosML),
-      marker: { size: 4, color: 'red' },
-      line: { color: 'red' }
-    }
-  ];
-}
+  enviarChat() {
+    if (!this.mensajeUsuario.trim()) return;
 
+    this.mensajes.push({ rol: 'user', texto: this.mensajeUsuario });
 
-  Plotly.newPlot('grafica3D', data, {
-    title: this.modoSuperficie
-      ? 'Superficie 3D con relieve'
-      : 'Gráfica 3D (puntos)',
-    scene: {
-      xaxis: { title: 'Mes' },
-      yaxis: { title: 'Variable / Valor' },
-      zaxis: { title: 'Ingresos' }
-    }
-  });
-}
+    this.chatService.enviarMensaje(
+      this.mensajeUsuario,
+      this.excelData
+    ).subscribe(res => {
+      this.mensajes.push({ rol: 'ia', texto: res.respuesta });
+    });
 
+    this.mensajeUsuario = '';
+  }
 }
