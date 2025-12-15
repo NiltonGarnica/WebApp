@@ -2,27 +2,133 @@
 
   <main class="flex-1 p-6 space-y-6">
 
-    <!-- TARJETAS -->
+    <!-- ================= TARJETAS ================= -->
     <app-tarjetas-resumen
       [usuariosActivos]="usuariosActivos"
       [ingresosMes]="ingresosMes"
       [gastosMes]="gastosMes">
     </app-tarjetas-resumen>
 
-    <!-- 🎯 PANEL CENTRAL (SOLO UNO) -->
+    <!-- ================= PANEL CENTRAL ================= -->
     <app-panel-central
       [datos]="datosParaGrafico"
       [ingresos]="ingresosMes"
       [gastos]="gastosMes">
     </app-panel-central>
 
-    <!-- TABLA -->
-   
+    <!-- ================= IA: INPUTS + PREDICCIÓN ================= -->
+    <div class="bg-white rounded-xl shadow p-6 space-y-4">
+
+      <h2 class="text-xl font-bold">
+        🤖 Predicción de Ingresos (IA)
+      </h2>
+
+      <p class="text-gray-600">
+        Ajusta los valores y deja que la IA estime los ingresos.
+      </p>
+
+      <!-- INPUTS -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <div>
+          <label class="text-sm font-semibold">Gastos</label>
+          <input
+            type="number"
+            [(ngModel)]="inputGastos"
+            class="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold">Clientes</label>
+          <input
+            type="number"
+            [(ngModel)]="inputClientes"
+            class="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+        <div>
+          <label class="text-sm font-semibold">Promociones</label>
+          <input
+            type="number"
+            [(ngModel)]="inputPromociones"
+            class="w-full border rounded px-3 py-2"
+          />
+        </div>
+
+      </div>
+
+      <!-- BOTÓN -->
+      <button
+        (click)="predecirIngresos()"
+        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 w-fit"
+      >
+        Predecir ingresos
+      </button>
+
+      <!-- ESTADO -->
+      <p *ngIf="cargandoPrediccion" class="text-gray-500">
+        Calculando predicción...
+      </p>
+
+      <p *ngIf="errorPrediccion" class="text-red-600">
+        {{ errorPrediccion }}
+      </p>
+
+    </div>
+
+    <!-- ================= RESULTADOS IA ================= -->
+    <div *ngIf="prediccionIngresos !== null"
+         class="bg-white rounded-xl shadow p-6 space-y-3">
+
+      <h3 class="text-lg font-bold">
+        📊 Resultados de la Predicción
+      </h3>
+
+      <p>
+        📊 Ingresos reales:
+        <strong>{{ ingresosMes | number:'1.2-2' }}</strong>
+      </p>
+
+      <p>
+        🤖 Ingresos predichos:
+        <strong>{{ prediccionIngresos | number:'1.2-2' }}</strong>
+      </p>
+
+      <p
+        *ngIf="diferenciaIngresos !== null"
+        [ngClass]="diferenciaIngresos >= 0 ? 'text-green-600' : 'text-red-600'"
+      >
+        🔍 Diferencia:
+        <strong>{{ diferenciaIngresos | number:'1.2-2' }}</strong>
+      </p>
+
+    </div>
+
+    <!-- ================= GRÁFICO REAL VS PREDICCIÓN ================= -->
+    <div *ngIf="prediccionIngresos !== null"
+         class="bg-white rounded-xl shadow p-6">
+
+      <h3 class="text-lg font-bold mb-4">
+        📈 Comparación: Real vs Predicción
+      </h3>
+
+      <app-grafico-real-vs-prediccion
+        [real]="ingresosMes"
+        [prediccion]="prediccionIngresos">
+      </app-grafico-real-vs-prediccion>
+
+    </div>
+
+    <!-- ================= TABLA ================= -->
+    <app-tabla-movimientos></app-tabla-movimientos>
+
   </main>
 
 </div>
 
-<!-- BIENVENIDA -->
+<!-- ================= BIENVENIDA ================= -->
 <div class="p-6">
   <h1 class="text-3xl font-bold mb-2">
     Bienvenido, {{ user?.nombre }} 👋
